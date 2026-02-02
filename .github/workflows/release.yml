@@ -1,0 +1,40 @@
+name: Release Build 🚀
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Build cross-platform binaries
+        run: |
+          npx pkg . --out-path dist
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: privacy-guard-binaries
+          path: dist/*
+
+  docker-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: crimsondevil333333/privacy-guard:latest
