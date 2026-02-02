@@ -24,7 +24,7 @@
 **Body:**
 ```json
 {
-  "text": "My AWS key is AKIA1234567890ABCDEF",
+  "text": "Contact me at satyaa@example.com or call +91-9876543210. My AWS key is AKIA1234567890ABCDEF.",
   "mode": "tag"
 }
 ```
@@ -32,17 +32,25 @@
 **Response:**
 ```json
 {
-  "originalLength": 32,
-  "scrubbedLength": 24,
-  "processingTimeMs": "0.12",
-  "scrubbedCount": 1,
-  "detectedTypes": ["awsAccessKey"],
-  "result": "My AWS key is [AWSACCESSKEY]"
+  "originalLength": 92,
+  "scrubbedLength": 78,
+  "processingTimeMs": "0.18",
+  "scrubbedCount": 3,
+  "detectedTypes": ["email", "phone", "awsAccessKey"],
+  "result": "Contact me at [EMAIL] or call [PHONE]. My AWS key is [AWSACCESSKEY]."
 }
 ```
 
+### Modes of Operation
+
+| Mode | Input | Output |
+|---|---|---|
+| `redact` | `user@example.com` | `[REDACTED]` |
+| `tag` | `user@example.com` | `[EMAIL]` |
+| `partial` | `user@example.com` | `u****r@example.com` |
+
 ### `GET /stats`
-Returns global metrics for the current session.
+Returns global metrics for the current session including request counts and total items scrubbed.
 
 ---
 *Maintained by Satyaa & Clawdy 🦞*
