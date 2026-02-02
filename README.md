@@ -1,31 +1,21 @@
 # PrivacyGuard API 🛡️
 
-**PrivacyGuard** is a lightweight, high-performance API service designed to protect sensitive data by automatically identifying and scrubbing Personal Identifiable Information (PII) from text.
+**PrivacyGuard** is a lightweight, high-performance API service designed to protect sensitive data by automatically identifying and scrubbing Personal Identifiable Information (PII) and API keys from text.
 
-Built for developers who care about security and compliance, PrivacyGuard ensures that logs, training data, or messages are cleared of emails, phone numbers, and other identifiers before they hit the cloud.
+## 🚀 New in v1.1.0
 
-## 🚀 Features
+- **Advanced Pattern Detection**: Now detects AWS keys, GitHub tokens, Slack tokens, Private keys, and more.
+- **Flexible Masking Modes**: Choose how you want to hide data:
+  - `redact`: Completely replace with a placeholder (default).
+  - `partial`: Keep some characters for context (e.g., `s****a@example.com`).
+  - `tag`: Replace with the data type (e.g., `[EMAIL]`, `[AWSACCESSKEY]`).
+- **Stats & Monitoring**: New `/stats` endpoint to track request volume and scrubbed items.
+
+## 🚀 Core Features
 
 - **Blazing Fast**: Built on Fastify for sub-millisecond scrubbing.
-- **Pattern Ready**: Native support for Emails, Phone Numbers, Credit Cards, IPv4, URLs, and SSNs.
-- **Detailed Masking**: Choose between generic redaction (`[REDACTED]`) or detailed tags (e.g., `[EMAIL]`, `[PHONE]`).
 - **Pi Optimized**: Extremely low footprint, perfect for Raspberry Pi or edge deployments.
 - **Docker Ready**: One command to stay secure.
-
-## 🛠️ Quick Start
-
-### Using Docker
-```bash
-docker run -p 3000:3000 crimsondevil333333/privacy-guard
-```
-
-### Manual Install
-```bash
-git clone https://github.com/CrimsonDevil333333/privacy-guard.git
-cd privacy-guard
-npm install
-npm start
-```
 
 ## 📡 API Usage
 
@@ -34,26 +24,25 @@ npm start
 **Body:**
 ```json
 {
-  "text": "Contact me at satyaa@example.com or call +91-9876543210",
-  "detailed": true
+  "text": "My AWS key is AKIA1234567890ABCDEF",
+  "mode": "tag"
 }
 ```
 
 **Response:**
 ```json
 {
-  "originalLength": 52,
-  "scrubbedLength": 48,
-  "processingTimeMs": "0.15",
-  "result": "Contact me at [EMAIL] or call [PHONE]"
+  "originalLength": 32,
+  "scrubbedLength": 24,
+  "processingTimeMs": "0.12",
+  "scrubbedCount": 1,
+  "detectedTypes": ["awsAccessKey"],
+  "result": "My AWS key is [AWSACCESSKEY]"
 }
 ```
 
-## 🏗️ Technical Stack
-
-- **Engine**: Node.js / Fastify
-- **Logic**: Optimized Regex-based PII filtering
-- **UI/Aesthetics**: Chalk-enhanced CLI logging
+### `GET /stats`
+Returns global metrics for the current session.
 
 ---
 *Maintained by Satyaa & Clawdy 🦞*
