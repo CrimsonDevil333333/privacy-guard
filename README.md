@@ -4,17 +4,10 @@
 
 Built for developers and privacy-conscious users, it acts as a secure buffer between your raw data and the outside world.
 
-## 🌟 Why Use PrivacyGuard?
+## 🚀 New in v1.2.0
 
-In our day-to-day digital life, we often handle sensitive data that shouldn't be shared. PrivacyGuard helps you:
-- **Sanitize Logs**: Automatically strip emails and keys from application logs before they are stored or uploaded.
-- **AI Safety**: Scrub PII from prompts before sending them to cloud-based LLMs (like OpenAI or Anthropic) to ensure your personal details never leave your local environment.
-- **Data Sharing**: Clean datasets or documents before sharing them with colleagues or public forums.
-- **Compliance**: Help meet GDPR, HIPAA, or local data protection standards by ensuring PII is handled locally.
-
-## 🚀 New in v1.1.0
-
-- **Advanced Pattern Detection**: Now detects AWS keys, GitHub tokens, Slack tokens, Private keys, IBANs, and BSNs.
+- **🔌 Plugin Architecture (Optional)**: Users can now drop custom `.js` pattern files into the `/plugins` directory to extend detection without touching the core.
+- **Advanced Pattern Detection**: Native support for AWS keys, GitHub tokens, Slack tokens, IBANs, and BSNs.
 - **Flexible Masking Modes**: Choose how you want to hide data (`redact`, `partial`, or `tag`).
 - **Stats & Monitoring**: New `/stats` endpoint to track processed volume.
 
@@ -48,7 +41,21 @@ In our day-to-day digital life, we often handle sensitive data that shouldn't be
 }
 ```
 
-## 🛠️ Integration Guide
+## 🛠️ Plugin Guide (Optional)
+
+Add your own patterns by creating a file in `/plugins/my-patterns.js`:
+
+```javascript
+module.exports = {
+  patterns: {
+    internal_id: /\bID-[0-9]{5}\b/g
+  }
+};
+```
+
+PrivacyGuard will automatically load these on startup!
+
+## 🤝 Integration Guide
 
 You can easily integrate PrivacyGuard into your existing workflows using simple HTTP calls.
 
@@ -62,38 +69,7 @@ def clean_text(input_text):
         json={"text": input_text, "mode": "redact"}
     )
     return response.json()['result']
-
-# Use it before logging or sending to an LLM
-log_message = "Error from user user@email.com: API Key 12345 leaked"
-print(clean_text(log_message))
 ```
-
-### **JavaScript/Node.js Integration**
-```javascript
-const scrubData = async (text) => {
-  const res = await fetch('http://localhost:3000/anonymize', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text, mode: 'partial' })
-  });
-  const data = await res.json();
-  return data.result;
-};
-```
-
-## 📱 Day-to-Day Examples
-
-1. **Before posting to a forum**: 
-   *Input*: "My server IP is 192.168.1.1 and my email is dev@satyaa.com"
-   *Output*: "My server IP is [IPV4] and my email is [EMAIL]"
-
-2. **Cleaning a config file for help**: 
-   *Input*: "aws_key=AKIAJS72EXAMPLE"
-   *Output*: "aws_key=[AWSACCESSKEY]"
-
-3. **Masking customer support tickets**:
-   *Input*: "My phone is 9876543210"
-   *Output*: "My phone is 9876****3210" (using `mode: partial`)
 
 ---
 *Maintained by Satyaa & Clawdy 🦞*
