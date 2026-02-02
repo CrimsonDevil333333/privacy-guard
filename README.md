@@ -21,7 +21,7 @@ In our day-to-day digital life, we often handle sensitive data that shouldn't be
 ## 🚀 Core Features
 
 - **Blazing Fast**: Built on Fastify for sub-millisecond scrubbing.
-- **Pi Optimized**: Extremely low footprint, perfect for Raspberry Pi or edge deployments.
+- **Pi Optimized**: Extremely low footprint, perfect for edge deployments.
 - **Docker Ready**: One command to stay secure.
 
 ## 📡 API Usage
@@ -58,13 +58,13 @@ import requests
 
 def clean_text(input_text):
     response = requests.post(
-        "http://your-pi-ip:3000/anonymize",
+        "http://your-server-ip:3000/anonymize",
         json={"text": input_text, "mode": "redact"}
     )
     return response.json()['result']
 
 # Use it before logging or sending to an LLM
-log_message = "Error from user satyaa@email.com: API Key 12345 leaked"
+log_message = "Error from user user@email.com: API Key 12345 leaked"
 print(clean_text(log_message))
 ```
 
